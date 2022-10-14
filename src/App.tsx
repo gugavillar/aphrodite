@@ -1,14 +1,13 @@
-import { Flex } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 
 import { Header } from './components/Header'
+import { Sidebar } from './components/Sidebar'
 
 export const App = () => {
   return (
-    <Flex
-      width="full"
-      height="full"
-    >
+    <Box>
       <Header />
-    </Flex>
+      <Sidebar />
+    </Box>
   )
 }
