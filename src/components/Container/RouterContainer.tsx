@@ -3,11 +3,11 @@ import { ReactNode } from 'react'
 import { Flex } from '@chakra-ui/react'
 import { BrowserRouter } from 'react-router-dom'
 
-interface ContainerProps {
+interface RouterContainerProps {
   children: ReactNode
 }
 
-export const Container = ({ children }: ContainerProps) => {
+export const RouterContainer = ({ children }: RouterContainerProps) => {
   return (
     <BrowserRouter>
       <Flex
