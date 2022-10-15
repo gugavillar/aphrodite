@@ -1,12 +1,12 @@
 import { Flex } from '@chakra-ui/react'
 
-import { Container } from '../Container'
+import { ContentContainer } from '../Container/ContentContainer'
+import { RouterContainer } from '../Container/RouterContainer'
 import { NavList } from './NavList'
-import { RouteContainer } from './RouteContainer'
 
 export const Sidebar = () => {
   return (
-    <Container>
+    <RouterContainer>
       <Flex
         width={56}
         direction="column"
@@ -15,7 +15,7 @@ export const Sidebar = () => {
       >
         <NavList />
       </Flex>
-      <RouteContainer />
-    </Container>
+      <ContentContainer />
+    </RouterContainer>
   )
 }
