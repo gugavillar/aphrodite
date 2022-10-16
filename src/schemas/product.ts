@@ -13,6 +13,4 @@ const productScheme = yup.object({
     .required()
 })
 
-export type FormProductType = yup.InferType<typeof productScheme>
-
 export const productResolver = yupResolver(productScheme)
