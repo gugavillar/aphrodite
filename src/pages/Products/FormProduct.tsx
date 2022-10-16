@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react'
+import { ChangeEvent, useCallback } from 'react'
 
 import { Button, Flex } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
@@ -8,9 +8,11 @@ import {
   currencyWithoutDotsAndComma,
   fieldFormatCurrency
 } from '../../formatters/currency'
+import { useToastCustom } from '../../hooks/useToastCustom'
 import { productResolver } from '../../schemas/product'
+import { createProduct } from '../../services/products'
 
-interface ProductForm {
+export interface ProductForm {
   name: string
   value: string
   amount: number
@@ -21,15 +23,35 @@ export const FormProduct = () => {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { isDirty, isValid }
   } = useForm<ProductForm>({
     resolver: productResolver,
     mode: 'onChange'
   })
 
-  const onSubmitHandler = (values: ProductForm) => {
-    console.log(values)
-  }
+  const toast = useToastCustom()
+
+  const onSubmitHandler = useCallback(
+    async (values: ProductForm) => {
+      try {
+        await createProduct(values)
+        toast({
+          title: 'Produto cadastrado',
+          description: `O produto ${values?.name} foi inserido.`,
+          status: 'success'
+        })
+        reset()
+      } catch (error) {
+        toast({
+          title: 'Falha na inserção',
+          description: `O produto ${values?.name} não foi inserido.`,
+          status: 'error'
+        })
+      }
+    },
+    [reset, toast]
+  )
 
   return (
     <Flex
