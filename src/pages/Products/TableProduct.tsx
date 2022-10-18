@@ -5,11 +5,13 @@ import { LoadingContainer } from '../../components/Container/LoadingContainer'
 import { InfoText } from '../../components/InfoText'
 import { Table } from '../../components/Table'
 
-const tableHeadingType = {
+interface TableHeading {
+  readonly string: 'string'
+  readonly number: 'number'
+}
+
+const tableHeadingType: TableHeading = {
   string: 'string',
-  number: 'number'
-} as {
-  string: 'string'
   number: 'number'
 }
 
