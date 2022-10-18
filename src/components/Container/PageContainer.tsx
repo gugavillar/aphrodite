@@ -9,7 +9,7 @@ interface PageContainerProps {
 export const PageContainer = ({ children }: PageContainerProps) => {
   return (
     <Flex
-      bg="whiteAlpha.700"
+      bg="white"
       width="full"
       height="full"
       borderRadius="base"
