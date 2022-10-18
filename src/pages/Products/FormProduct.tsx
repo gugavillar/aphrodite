@@ -8,9 +8,7 @@ import {
   currencyWithoutDotsAndComma,
   fieldFormatCurrency
 } from '../../formatters/currency'
-import { useToastCustom } from '../../hooks/useToastCustom'
 import { productResolver } from '../../schemas/product'
-import { createProduct } from '../../services/products'
 
 export interface ProductForm {
   name: string
@@ -18,39 +16,28 @@ export interface ProductForm {
   amount: number
 }
 
-export const FormProduct = () => {
+interface FormProductProps {
+  onSubmitHandler: (values: ProductForm) => Promise<void>
+}
+
+export const FormProduct = ({ onSubmitHandler }: FormProductProps) => {
   const {
     register,
     handleSubmit,
     setValue,
     reset,
-    formState: { isDirty, isValid }
+    formState: { isDirty, isValid, isSubmitting }
   } = useForm<ProductForm>({
     resolver: productResolver,
     mode: 'onChange'
   })
 
-  const toast = useToastCustom()
-
-  const onSubmitHandler = useCallback(
+  const onSubmit = useCallback(
     async (values: ProductForm) => {
-      try {
-        await createProduct(values)
-        toast({
-          title: 'Produto cadastrado',
-          description: `O produto ${values?.name} foi inserido.`,
-          status: 'success'
-        })
-        reset()
-      } catch (error) {
-        toast({
-          title: 'Falha na inserção',
-          description: `O produto ${values?.name} não foi inserido.`,
-          status: 'error'
-        })
-      }
+      await onSubmitHandler(values)
+      reset()
     },
-    [reset, toast]
+    [onSubmitHandler, reset]
   )
 
   return (
@@ -58,7 +45,7 @@ export const FormProduct = () => {
       mt={8}
       as="form"
       direction="column"
-      onSubmit={handleSubmit(onSubmitHandler)}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <Flex
         gap={2}
@@ -98,6 +85,7 @@ export const FormProduct = () => {
         alignSelf="center"
         isDisabled={!isDirty || !isValid}
         type="submit"
+        isLoading={isSubmitting}
       >
         Cadastrar
       </Button>

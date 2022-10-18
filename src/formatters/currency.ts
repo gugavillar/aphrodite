@@ -4,7 +4,7 @@ const money = new Intl.NumberFormat('pt-BR', {
 })
 
 export const currency = (value: number) => {
-  if (!value) return
+  if (!value) return ''
   return money?.format(value)
 }
 
