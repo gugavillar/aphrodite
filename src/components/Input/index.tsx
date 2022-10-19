@@ -1,47 +1,43 @@
-import { forwardRef, LegacyRef, ReactNode } from 'react'
+import { forwardRef, LegacyRef } from 'react'
 
 import {
   Input as ChakraInput,
   InputProps as ChakraInputProps,
-  Box,
-  Text,
-  InputGroup,
-  InputLeftElement
+  FormControl,
+  FormLabel,
+  FormErrorMessage
 } from '@chakra-ui/react'
 
 interface InputProps extends ChakraInputProps {
   label: string
-  icon?: ReactNode
+  error?: string
 }
 
 const InputField = forwardRef(
   (
-    { label, width, icon, ...props }: InputProps,
+    { label, width, error, ...props }: InputProps,
     ref: LegacyRef<HTMLInputElement>
   ) => {
     return (
-      <Box
-        textAlign="center"
+      <FormControl
         width={width}
+        isInvalid={!!error}
       >
-        <Text
+        <FormLabel
           fontSize="sm"
           mb={1}
           color="blackAlpha.400"
           fontWeight="semibold"
+          textAlign="center"
         >
           {label}
-        </Text>
-        <InputGroup>
-          {icon && (
-            <InputLeftElement pointerEvents="none">{icon}</InputLeftElement>
-          )}
-          <ChakraInput
-            {...props}
-            ref={ref}
-          />
-        </InputGroup>
-      </Box>
+        </FormLabel>
+        <ChakraInput
+          {...props}
+          ref={ref}
+        />
+        {error && <FormErrorMessage>{error}</FormErrorMessage>}
+      </FormControl>
     )
   }
 )

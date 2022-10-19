@@ -26,7 +26,7 @@ export const FormProduct = ({ onSubmitHandler }: FormProductProps) => {
     handleSubmit,
     setValue,
     reset,
-    formState: { isDirty, isValid, isSubmitting }
+    formState: { isDirty, isValid, isSubmitting, errors }
   } = useForm<ProductForm>({
     resolver: productResolver,
     mode: 'onChange'
@@ -54,6 +54,7 @@ export const FormProduct = ({ onSubmitHandler }: FormProductProps) => {
       >
         <Input
           {...register('name')}
+          error={errors?.name?.message}
           type="text"
           label="Nome do produto"
           width={80}
@@ -64,6 +65,7 @@ export const FormProduct = ({ onSubmitHandler }: FormProductProps) => {
               setValue('value', fieldFormatCurrency(event?.target?.value)),
             setValueAs: (value) => currencyWithoutDotsAndComma(value)
           })}
+          error={errors?.value?.message}
           type="text"
           label="Valor do produto"
           width={48}
@@ -71,11 +73,10 @@ export const FormProduct = ({ onSubmitHandler }: FormProductProps) => {
         <Input
           {...register('amount')}
           type="number"
-          min={1}
-          max={9999}
           step={1}
           label="Quantidade de produto"
           width={48}
+          error={errors?.amount?.message}
         />
       </Flex>
       <Button
