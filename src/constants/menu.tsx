@@ -1,4 +1,5 @@
 import { Products as PageProducts } from '../pages/Products'
+import { Rooms as PageRooms } from '../pages/Rooms'
 
 export const MENU = [
   {
@@ -7,7 +8,8 @@ export const MENU = [
   },
   {
     link: '/rooms',
-    label: 'Apartamentos'
+    label: 'Apartamentos',
+    element: <PageRooms />
   },
   {
     link: '/products',
