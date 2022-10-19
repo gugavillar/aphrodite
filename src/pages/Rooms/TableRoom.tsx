@@ -1,8 +1,21 @@
+import { ChangeEvent } from 'react'
+
 import { Box, Flex, Text, VStack } from '@chakra-ui/react'
+import { UseFormRegister, UseFormSetValue } from 'react-hook-form'
 
 import { Input } from '../../components/Input'
+import {
+  currencyWithoutDotsAndComma,
+  fieldFormatCurrency
+} from '../../formatters/currency'
+import { RoomForm } from './FormRoom'
 
-export const TableRoom = () => {
+interface TableRoomProps {
+  register: UseFormRegister<RoomForm>
+  setValue: UseFormSetValue<RoomForm>
+}
+
+export const TableRoom = ({ register, setValue }: TableRoomProps) => {
   return (
     <Flex
       mt={6}
@@ -31,14 +44,38 @@ export const TableRoom = () => {
           <Input
             label="Valor do quarto"
             width={64}
+            {...register('week.value', {
+              onChange: (event: ChangeEvent<HTMLInputElement>) =>
+                setValue(
+                  'week.value',
+                  fieldFormatCurrency(event?.target?.value)
+                ),
+              setValueAs: (value) => currencyWithoutDotsAndComma(value)
+            })}
           />
           <Input
             label="Valor excedente / hora"
             width={64}
+            {...register('week.excessHour', {
+              onChange: (event: ChangeEvent<HTMLInputElement>) =>
+                setValue(
+                  'week.excessHour',
+                  fieldFormatCurrency(event?.target?.value)
+                ),
+              setValueAs: (value) => currencyWithoutDotsAndComma(value)
+            })}
           />
           <Input
             label="Valor da pernoite"
             width={64}
+            {...register('week.stayOvernight', {
+              onChange: (event: ChangeEvent<HTMLInputElement>) =>
+                setValue(
+                  'week.stayOvernight',
+                  fieldFormatCurrency(event?.target?.value)
+                ),
+              setValueAs: (value) => currencyWithoutDotsAndComma(value)
+            })}
           />
         </VStack>
       </Box>
@@ -64,14 +101,38 @@ export const TableRoom = () => {
           <Input
             label="Valor do quarto"
             width={64}
+            {...register('weekend.value', {
+              onChange: (event: ChangeEvent<HTMLInputElement>) =>
+                setValue(
+                  'weekend.value',
+                  fieldFormatCurrency(event?.target?.value)
+                ),
+              setValueAs: (value) => currencyWithoutDotsAndComma(value)
+            })}
           />
           <Input
             label="Valor excedente / hora"
             width={64}
+            {...register('weekend.excessHour', {
+              onChange: (event: ChangeEvent<HTMLInputElement>) =>
+                setValue(
+                  'weekend.excessHour',
+                  fieldFormatCurrency(event?.target?.value)
+                ),
+              setValueAs: (value) => currencyWithoutDotsAndComma(value)
+            })}
           />
           <Input
             label="Valor da pernoite"
             width={64}
+            {...register('weekend.stayOvernight', {
+              onChange: (event: ChangeEvent<HTMLInputElement>) =>
+                setValue(
+                  'weekend.stayOvernight',
+                  fieldFormatCurrency(event?.target?.value)
+                ),
+              setValueAs: (value) => currencyWithoutDotsAndComma(value)
+            })}
           />
         </VStack>
       </Box>
