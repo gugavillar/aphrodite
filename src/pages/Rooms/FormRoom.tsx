@@ -1,10 +1,14 @@
+import { useCallback } from 'react'
+
 import { Button, Flex } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 
 import { InfoText } from '../../components/InfoText'
 import { Input } from '../../components/Input'
 import { Select } from '../../components/Select'
+import { useToastCustom } from '../../hooks/useToastCustom'
 import { roomResolver } from '../../schemas/room'
+import { createRoom } from '../../services/rooms'
 import { TableRoom } from './TableRoom'
 
 const ROOM_TYPE = [
@@ -37,14 +41,40 @@ export interface RoomForm {
 }
 
 export const FormRoom = () => {
+  const toast = useToastCustom()
+
   const {
     register,
     setValue,
+    handleSubmit,
+    reset,
     formState: { errors, isValid, isDirty, isSubmitting }
   } = useForm<RoomForm>({
     mode: 'onChange',
     resolver: roomResolver
   })
+
+  const onSubmit = useCallback(
+    async (values: RoomForm) => {
+      try {
+        await createRoom(values)
+        toast({
+          status: 'success',
+          title: 'Apartamento cadastrado',
+          description: `O apartamento de número ${values?.number} foi inserido`
+        })
+        reset()
+      } catch (error) {
+        toast({
+          title: 'Falha na inserção',
+          description: `O apartamento de número ${values?.number} não foi inserido`,
+          status: 'error'
+        })
+      }
+    },
+    [reset, toast]
+  )
+
   return (
     <Flex
       as="form"
@@ -55,6 +85,7 @@ export const FormRoom = () => {
       align="center"
       justify="center"
       pb={8}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <Flex
         gap={2}
