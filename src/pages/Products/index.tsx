@@ -88,7 +88,7 @@ export const Products = () => {
   }, [loadProducts])
 
   return (
-    <PageContainer>
+    <PageContainer bg="white">
       <InfoText
         mt={6}
         title="Cadastramento de produtos"

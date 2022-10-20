@@ -4,7 +4,7 @@ import { FormRoom } from './FormRoom'
 
 export const Rooms = () => {
   return (
-    <PageContainer>
+    <PageContainer bg="white">
       <InfoText
         mt={6}
         title="Cadastramento dos quartos"
