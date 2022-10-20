@@ -1,15 +1,16 @@
 import { ReactElement } from 'react'
 
-import { Flex, Spinner } from '@chakra-ui/react'
+import { Flex, FlexProps, Spinner } from '@chakra-ui/react'
 
-interface LoadingContainerProps {
+interface LoadingContainerProps extends FlexProps {
   isLoadingData: boolean
   children: ReactElement
 }
 
 export const LoadingContainer = ({
   isLoadingData,
-  children
+  children,
+  ...props
 }: LoadingContainerProps) => {
   return isLoadingData ? (
     <Flex
@@ -17,6 +18,7 @@ export const LoadingContainer = ({
       align="center"
       justify="center"
       height={48}
+      {...props}
     >
       <Spinner
         thickness="3px"
