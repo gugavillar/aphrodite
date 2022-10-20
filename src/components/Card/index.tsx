@@ -2,18 +2,19 @@ import { ReactNode } from 'react'
 
 import { Flex, FlexProps } from '@chakra-ui/react'
 
-interface PageContainerProps extends FlexProps {
+interface CardProps extends FlexProps {
   children: ReactNode
 }
 
-export const PageContainer = ({ children, ...props }: PageContainerProps) => {
+export const Card = ({ children, ...props }: CardProps) => {
   return (
     <Flex
-      width="full"
-      height="full"
+      width={80}
+      height={64}
       borderRadius="base"
+      bg="whiteAlpha.800"
+      boxShadow="base"
       p={3}
-      direction="column"
       {...props}
     >
       {children}
