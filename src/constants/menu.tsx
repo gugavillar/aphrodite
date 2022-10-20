@@ -1,10 +1,12 @@
+import { Manager as PageManager } from '../pages/Manager'
 import { Products as PageProducts } from '../pages/Products'
 import { Rooms as PageRooms } from '../pages/Rooms'
 
 export const MENU = [
   {
     link: '/manager',
-    label: 'Gerenciamento'
+    label: 'Gerenciamento',
+    element: <PageManager />
   },
   {
     link: '/rooms',
