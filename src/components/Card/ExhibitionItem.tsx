@@ -1,22 +1,27 @@
-import { Flex, Text } from '@chakra-ui/react'
+import { ReactNode } from 'react'
 
-interface ExhibitionItemProps {
+import { Flex, FlexProps, Text } from '@chakra-ui/react'
+
+interface ExhibitionItemProps extends FlexProps {
   label: string
-  description: string
+  children: ReactNode
 }
 
-export const ExhibitionItem = ({ label, description }: ExhibitionItemProps) => {
+export const ExhibitionItem = ({
+  label,
+  children,
+  ...props
+}: ExhibitionItemProps) => {
   return (
     <Flex
       direction="column"
-      textAlign="center"
+      align="center"
       width="inherit"
-      borderBottom="1px solid"
-      borderColor="gray.300"
       height={16}
+      {...props}
     >
       <Text fontSize="xs">{label}</Text>
-      <Text fontSize="3xl">{description}</Text>
+      {children}
     </Flex>
   )
 }

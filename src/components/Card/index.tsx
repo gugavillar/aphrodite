@@ -10,11 +10,11 @@ export const Card = ({ children, ...props }: CardProps) => {
   return (
     <Flex
       width={80}
-      height={64}
-      borderRadius="base"
+      borderRadius="2xl"
       bg="whiteAlpha.800"
       boxShadow="base"
       p={3}
+      direction="column"
       {...props}
     >
       {children}
