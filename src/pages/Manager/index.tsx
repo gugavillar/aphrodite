@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
 import { Card } from '../../components/Card'
-import { Footer } from '../../components/Card/Footer'
 import { Header } from '../../components/Card/Header'
 import { Middle } from '../../components/Card/Middle'
 import { LoadingContainer } from '../../components/Container/LoadingContainer'
@@ -57,7 +56,6 @@ export const Manager = () => {
               status={room?.data?.status}
               roomId={room?.ref?.value?.id}
             />
-            <Footer />
           </Card>
         ))}
       </PageContainer>

@@ -5,10 +5,16 @@ import { format } from 'date-fns'
 
 import { currency } from '../../formatters/currency'
 import { useToastCustom } from '../../hooks/useToastCustom'
-import { GetExpense, getRoomExpense } from '../../services/expenses'
+import {
+  closeExpenseRoom,
+  createExpense,
+  GetExpense,
+  getRoomExpense
+} from '../../services/expenses'
 import { Timer } from '../Timer'
 import { ExhibitionContainer } from './ExhibitionContainer'
 import { ExhibitionItem } from './ExhibitionItem'
+import { Footer } from './Footer'
 
 interface MiddleProps {
   status: 'Ativo' | 'Inativo'
@@ -20,8 +26,12 @@ const STATUS_COLOR = {
   Inativo: 'gray.500'
 }
 
+const EMPTY = '-'
+
 interface Expense {
+  expenseId: string
   entryTime: number
+  isOpen: boolean
   formattedEntryTime: string
   spendValue: string
 }
@@ -35,14 +45,18 @@ const formatExpense = (expense: GetExpense) => {
     0
   )
   return {
+    expenseId: expense?.ref?.value?.id,
     entryTime: expense?.data?.entryTime,
+    isOpen: expense?.data?.isOpen,
     formattedEntryTime,
-    spendValue: parcialSpendValue ? currency(parcialSpendValue) : currency(0)
+    spendValue: parcialSpendValue ? currency(parcialSpendValue) : EMPTY
   }
 }
 
 export const Middle = ({ status, roomId }: MiddleProps) => {
   const [expense, setExpense] = useState<Expense>()
+  const [isClosingExpense, setIsClosingExpense] = useState(false)
+  const [isOpeningExpense, setIsOpeningExpense] = useState(false)
 
   const toast = useToastCustom()
 
@@ -60,15 +74,70 @@ export const Middle = ({ status, roomId }: MiddleProps) => {
     }
   }, [roomId, toast])
 
+  const onCloseExpenseRoom = useCallback(
+    async (ref: string | undefined) => {
+      if (!ref) return
+
+      setIsClosingExpense(true)
+
+      try {
+        const response = await closeExpenseRoom(ref)
+        const formattedExpense = formatExpense(response)
+        setExpense(formattedExpense)
+        toast({
+          status: 'success',
+          description: 'As despesas para o apartamento foram encerradas',
+          title: 'Apartamento fechado'
+        })
+      } catch (error) {
+        toast({
+          status: 'error',
+          description: 'Erro ao encerrar a despesa do quarto',
+          title: 'Falha ao fechar o quarto'
+        })
+      } finally {
+        setIsClosingExpense(false)
+      }
+    },
+    [toast]
+  )
+
+  const onOpenExpenseRoom = useCallback(async () => {
+    setIsOpeningExpense(true)
+
+    try {
+      const response = await createExpense(roomId)
+      const formattedExpense = formatExpense(response)
+      setExpense(formattedExpense)
+      toast({
+        status: 'success',
+        title: 'Apartamento aberto',
+        description: 'As despesas para o apartamento já podem ser inseridas'
+      })
+    } catch (error) {
+      toast({
+        status: 'error',
+        description: 'Erro ao criar a despesa do quarto',
+        title: 'Falha ao abrir o quarto'
+      })
+    } finally {
+      setIsOpeningExpense(false)
+    }
+  }, [roomId, toast])
+
   useEffect(() => {
     getExpense()
   }, [getExpense])
+
+  const isOpenRoom = !!expense?.entryTime && expense?.isOpen
 
   return (
     <Fragment>
       <ExhibitionContainer mt={2}>
         <ExhibitionItem label="Hora de entrada">
-          <Text fontSize="2xl">{expense?.formattedEntryTime}</Text>
+          <Text fontSize="2xl">
+            {isOpenRoom ? expense?.formattedEntryTime : EMPTY}
+          </Text>
         </ExhibitionItem>
         <ExhibitionItem label="Status do quarto">
           <Flex
@@ -88,7 +157,11 @@ export const Middle = ({ status, roomId }: MiddleProps) => {
           borderBottom="1px solid"
           borderColor="gray.300"
         >
-          <Timer entryTime={expense?.entryTime} />
+          {isOpenRoom ? (
+            <Timer entryTime={expense?.entryTime} />
+          ) : (
+            <Text fontSize="2xl">{EMPTY}</Text>
+          )}
         </ExhibitionItem>
         <ExhibitionItem
           label="Consumo parcial"
@@ -98,6 +171,13 @@ export const Middle = ({ status, roomId }: MiddleProps) => {
           <Text fontSize="2xl">{expense?.spendValue}</Text>
         </ExhibitionItem>
       </ExhibitionContainer>
+      <Footer
+        isOpenRoom={isOpenRoom}
+        isOpeningExpense={isOpeningExpense}
+        isClosingExpense={isClosingExpense}
+        onOpenExpenseRoom={onOpenExpenseRoom}
+        onCloseExpenseRoom={() => onCloseExpenseRoom(expense?.expenseId)}
+      />
     </Fragment>
   )
 }

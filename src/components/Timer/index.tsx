@@ -4,10 +4,10 @@ import { Text } from '@chakra-ui/react'
 import { intervalToDuration } from 'date-fns'
 
 interface TimerProps {
-  entryTime?: number
+  entryTime: number
 }
 
-export const Timer = ({ entryTime = 0 }: TimerProps) => {
+export const Timer = ({ entryTime }: TimerProps) => {
   const [timer, setTimer] = useState('')
 
   useEffect(() => {
@@ -29,5 +29,5 @@ export const Timer = ({ entryTime = 0 }: TimerProps) => {
     return () => clearInterval(timer)
   }, [entryTime])
 
-  return <Text fontSize="2xl">{entryTime === 0 ? '-' : timer}</Text>
+  return <Text fontSize="2xl">{timer}</Text>
 }
