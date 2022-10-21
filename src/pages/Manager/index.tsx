@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
 
 import { Card } from '../../components/Card'
-import { Header } from '../../components/Card/Header'
-import { Middle } from '../../components/Card/Middle'
 import { LoadingContainer } from '../../components/Container/LoadingContainer'
 import { PageContainer } from '../../components/Container/PageContainer'
 import { useToastCustom } from '../../hooks/useToastCustom'
 import { GetAllRooms, getAllRooms } from '../../services/rooms'
+import { Header } from './Header'
+import { Middle } from './Middle'
 
 export const Manager = () => {
   const [rooms, setRooms] = useState<GetAllRooms>()

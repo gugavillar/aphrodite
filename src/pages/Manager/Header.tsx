@@ -1,7 +1,7 @@
 import { Text } from '@chakra-ui/react'
 
-import { ExhibitionContainer } from './ExhibitionContainer'
-import { ExhibitionItem } from './ExhibitionItem'
+import { ExhibitionContainer } from '../../components/Card/ExhibitionContainer'
+import { ExhibitionItem } from '../../components/Card/ExhibitionItem'
 
 interface HeaderProps {
   number: number
