@@ -18,6 +18,7 @@ import { Footer } from './Footer'
 interface MiddleProps {
   status: 'Ativo' | 'Inativo'
   roomId: string
+  number: number
 }
 
 interface Expense {
@@ -28,7 +29,7 @@ interface Expense {
   spendValue: string
 }
 
-export const Middle = ({ status, roomId }: MiddleProps) => {
+export const Middle = ({ status, roomId, number }: MiddleProps) => {
   const [expense, setExpense] = useState<Expense>()
   const [isClosingExpense, setIsClosingExpense] = useState(false)
   const [isOpeningExpense, setIsOpeningExpense] = useState(false)
@@ -147,6 +148,7 @@ export const Middle = ({ status, roomId }: MiddleProps) => {
         </ExhibitionItem>
       </ExhibitionContainer>
       <Footer
+        number={number}
         isOpenRoom={isOpenRoom}
         isOpeningExpense={isOpeningExpense}
         isClosingExpense={isClosingExpense}

@@ -1,6 +1,9 @@
 import { Flex, Button, useDisclosure } from '@chakra-ui/react'
+import { useForm } from 'react-hook-form'
 
 import { OrderModal } from '../../components/OrderModal'
+import { expenseResolver } from '../../schemas/expense'
+import { OrderContentModal } from './OrderContentModal'
 
 interface FooterProps {
   isOpeningExpense: boolean
@@ -8,6 +11,12 @@ interface FooterProps {
   onCloseExpenseRoom: () => Promise<void>
   onOpenExpenseRoom: () => Promise<void>
   isOpenRoom: boolean
+  number: number
+}
+
+export interface ModalForm {
+  product: string
+  quantity: number
 }
 
 export const Footer = ({
@@ -15,9 +24,17 @@ export const Footer = ({
   isOpeningExpense,
   isClosingExpense,
   onCloseExpenseRoom,
-  onOpenExpenseRoom
+  onOpenExpenseRoom,
+  number
 }: FooterProps) => {
   const { isOpen, onClose, onOpen } = useDisclosure()
+  const {
+    register,
+    formState: { errors, isValid, isDirty, isSubmitting }
+  } = useForm<ModalForm>({
+    mode: 'onChange',
+    resolver: expenseResolver
+  })
 
   return (
     <Flex
@@ -62,9 +79,14 @@ export const Footer = ({
       <OrderModal
         isOpen={isOpen}
         onClose={onClose}
-        title="Modal Title"
+        title={`Adicione produtos para o apartamento de número ${number}`}
+        isValidForm={!isValid || !isDirty}
+        isSubmittingForm={isSubmitting}
       >
-        teste
+        <OrderContentModal
+          register={register}
+          error={errors}
+        />
       </OrderModal>
     </Flex>
   )

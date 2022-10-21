@@ -13,3 +13,10 @@ export const formatProduct = (product: CreateProduct) => ({
   value: currency(product?.data?.value),
   productId: product?.ref?.value?.id
 })
+
+export const formatSelectProducts = (products: GetAllProducts) =>
+  products?.data?.map((product) => ({
+    label: product?.data?.name,
+    value: product?.ref?.value?.id,
+    isDisabled: product?.data?.amount <= 0
+  }))

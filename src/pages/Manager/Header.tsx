@@ -14,7 +14,7 @@ export const Header = ({ number, type }: HeaderProps) => {
   return (
     <ExhibitionContainer>
       <ExhibitionItem
-        label="N˚ do quarto"
+        label="N˚ do apartamento"
         borderBottom="1px solid"
         borderColor="gray.300"
       >
