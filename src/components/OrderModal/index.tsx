@@ -16,13 +16,17 @@ interface OrderModalProps {
   onClose: () => void
   children: ReactNode
   title: string
+  isValidForm: boolean
+  isSubmittingForm: boolean
 }
 
 export const OrderModal = ({
   isOpen,
   onClose,
   children,
-  title
+  title,
+  isValidForm,
+  isSubmittingForm
 }: OrderModalProps) => {
   return (
     <Modal
@@ -32,7 +36,13 @@ export const OrderModal = ({
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>{title}</ModalHeader>
+        <ModalHeader
+          width="28rem"
+          textAlign="center"
+          mx="auto"
+        >
+          {title}
+        </ModalHeader>
 
         <ModalCloseButton />
 
@@ -52,6 +62,8 @@ export const OrderModal = ({
           <Button
             width={40}
             colorScheme="green"
+            isDisabled={isValidForm}
+            isLoading={isSubmittingForm}
           >
             Adicionar
           </Button>
