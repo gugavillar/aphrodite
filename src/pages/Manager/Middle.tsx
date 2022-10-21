@@ -1,17 +1,16 @@
 import { Fragment, useCallback, useEffect, useState } from 'react'
 
 import { Flex, Text } from '@chakra-ui/react'
-import { format } from 'date-fns'
 
 import { ExhibitionContainer } from '../../components/Card/ExhibitionContainer'
 import { ExhibitionItem } from '../../components/Card/ExhibitionItem'
 import { Timer } from '../../components/Timer'
-import { currency } from '../../formatters/currency'
+import { EMPTY, STATUS_COLOR } from '../../constants/globals'
+import { formatExpense } from '../../formatters/expense'
 import { useToastCustom } from '../../hooks/useToastCustom'
 import {
   closeExpenseRoom,
   createExpense,
-  GetExpense,
   getRoomExpense
 } from '../../services/expenses'
 import { Footer } from './Footer'
@@ -21,36 +20,12 @@ interface MiddleProps {
   roomId: string
 }
 
-const STATUS_COLOR = {
-  Ativo: 'green.500',
-  Inativo: 'gray.500'
-}
-
-const EMPTY = '-'
-
 interface Expense {
   expenseId: string
   entryTime: number
   isOpen: boolean
   formattedEntryTime: string
   spendValue: string
-}
-
-const formatExpense = (expense: GetExpense) => {
-  const formattedEntryTime = expense?.data?.entryTime
-    ? format(expense?.data?.entryTime, 'HH:mm')
-    : '-'
-  const parcialSpendValue = expense?.data?.products?.reduce(
-    (total, product) => (total += product?.value * product?.quantity),
-    0
-  )
-  return {
-    expenseId: expense?.ref?.value?.id,
-    entryTime: expense?.data?.entryTime,
-    isOpen: expense?.data?.isOpen,
-    formattedEntryTime,
-    spendValue: parcialSpendValue ? currency(parcialSpendValue) : EMPTY
-  }
 }
 
 export const Middle = ({ status, roomId }: MiddleProps) => {
