@@ -1,4 +1,6 @@
-import { Flex, Button } from '@chakra-ui/react'
+import { Flex, Button, useDisclosure } from '@chakra-ui/react'
+
+import { OrderModal } from '../../components/OrderModal'
 
 interface FooterProps {
   isOpeningExpense: boolean
@@ -15,6 +17,8 @@ export const Footer = ({
   onCloseExpenseRoom,
   onOpenExpenseRoom
 }: FooterProps) => {
+  const { isOpen, onClose, onOpen } = useDisclosure()
+
   return (
     <Flex
       align="center"
@@ -28,6 +32,7 @@ export const Footer = ({
         fontSize="2xl"
         fontWeight="normal"
         isDisabled={!isOpenRoom}
+        onClick={onOpen}
       >
         Pedido
       </Button>
@@ -54,6 +59,13 @@ export const Footer = ({
           Abrir
         </Button>
       )}
+      <OrderModal
+        isOpen={isOpen}
+        onClose={onClose}
+        title="Modal Title"
+      >
+        teste
+      </OrderModal>
     </Flex>
   )
 }

@@ -3,6 +3,9 @@ import { Fragment, useCallback, useEffect, useState } from 'react'
 import { Flex, Text } from '@chakra-ui/react'
 import { format } from 'date-fns'
 
+import { ExhibitionContainer } from '../../components/Card/ExhibitionContainer'
+import { ExhibitionItem } from '../../components/Card/ExhibitionItem'
+import { Timer } from '../../components/Timer'
 import { currency } from '../../formatters/currency'
 import { useToastCustom } from '../../hooks/useToastCustom'
 import {
@@ -11,9 +14,6 @@ import {
   GetExpense,
   getRoomExpense
 } from '../../services/expenses'
-import { Timer } from '../Timer'
-import { ExhibitionContainer } from './ExhibitionContainer'
-import { ExhibitionItem } from './ExhibitionItem'
 import { Footer } from './Footer'
 
 interface MiddleProps {
