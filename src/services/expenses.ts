@@ -60,3 +60,39 @@ export const closeExpenseRoom = (ref: string) =>
       }
     })
   )
+
+interface ProductExpense {
+  name: string
+  quantity: number
+}
+
+export const addProductToExpenseRoom = (ref: string, product: ProductExpense) =>
+  faunaAPI.query<GetExpense>(
+    faunaQ.Let(
+      {
+        products: faunaQ.Select(
+          ['data', 'products'],
+          faunaQ.Get(faunaQ.Ref(faunaQ.Collection('room_expenses'), ref))
+        )
+      },
+      faunaQ.Update(faunaQ.Ref(faunaQ.Collection('room_expenses'), ref), {
+        data: {
+          products: faunaQ.Append(
+            [
+              {
+                name: product?.name,
+                quantity: product?.quantity,
+                value: faunaQ.Select(
+                  ['data', 'value'],
+                  faunaQ.Get(
+                    faunaQ.Match(faunaQ.Index('product_by_name'), product?.name)
+                  )
+                )
+              }
+            ],
+            faunaQ.Var('products')
+          )
+        }
+      })
+    )
+  )

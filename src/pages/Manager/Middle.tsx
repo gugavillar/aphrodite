@@ -9,11 +9,13 @@ import { EMPTY, STATUS_COLOR } from '../../constants/globals'
 import { formatExpense } from '../../formatters/expense'
 import { useToastCustom } from '../../hooks/useToastCustom'
 import {
+  addProductToExpenseRoom,
   closeExpenseRoom,
   createExpense,
   getRoomExpense
 } from '../../services/expenses'
 import { Footer } from './Footer'
+import { ModalForm } from './OrderModal'
 
 interface MiddleProps {
   status: 'Ativo' | 'Inativo'
@@ -101,6 +103,33 @@ export const Middle = ({ status, roomId, number }: MiddleProps) => {
     }
   }, [roomId, toast])
 
+  const onAddProductToRoom = useCallback(
+    async (product: ModalForm) => {
+      if (!expense?.expenseId) return
+
+      try {
+        const response = await addProductToExpenseRoom(
+          expense?.expenseId,
+          product
+        )
+        const formattedExpense = formatExpense(response)
+        setExpense(formattedExpense)
+        toast({
+          status: 'success',
+          description: `O produto ${product?.name} foi adicionado`,
+          title: 'Produto adicionado'
+        })
+      } catch (error) {
+        toast({
+          status: 'error',
+          description: 'O produto não foi adicionado',
+          title: 'Falha ao adicionar'
+        })
+      }
+    },
+    [expense?.expenseId, toast]
+  )
+
   useEffect(() => {
     getExpense()
   }, [getExpense])
@@ -148,12 +177,12 @@ export const Middle = ({ status, roomId, number }: MiddleProps) => {
         </ExhibitionItem>
       </ExhibitionContainer>
       <Footer
-        number={number}
         isOpenRoom={isOpenRoom}
         isOpeningExpense={isOpeningExpense}
         isClosingExpense={isClosingExpense}
         onOpenExpenseRoom={onOpenExpenseRoom}
         onCloseExpenseRoom={() => onCloseExpenseRoom(expense?.expenseId)}
+        onAddProductToRoom={onAddProductToRoom}
       />
     </Fragment>
   )

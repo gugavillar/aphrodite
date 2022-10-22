@@ -17,6 +17,6 @@ export const formatProduct = (product: CreateProduct) => ({
 export const formatSelectProducts = (products: GetAllProducts) =>
   products?.data?.map((product) => ({
     label: product?.data?.name,
-    value: product?.ref?.value?.id,
+    value: product?.data?.name,
     isDisabled: product?.data?.amount <= 0
   }))

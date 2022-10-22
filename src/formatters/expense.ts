@@ -8,10 +8,12 @@ export const formatExpense = (expense: GetExpense) => {
   const formattedEntryTime = expense?.data?.entryTime
     ? format(expense?.data?.entryTime, 'HH:mm')
     : '-'
-  const parcialSpendValue = expense?.data?.products?.reduce(
-    (total, product) => (total += product?.value * product?.quantity),
-    0
-  )
+  const parcialSpendValue = expense?.data?.isOpen
+    ? expense?.data?.products?.reduce(
+        (total, product) => (total += product?.value * product?.quantity),
+        0
+      )
+    : 0
   return {
     expenseId: expense?.ref?.value?.id,
     entryTime: expense?.data?.entryTime,
