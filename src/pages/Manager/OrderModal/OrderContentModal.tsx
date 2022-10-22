@@ -3,12 +3,13 @@ import { useCallback, useEffect, useState } from 'react'
 import { Flex } from '@chakra-ui/react'
 import { FieldErrors, UseFormRegister } from 'react-hook-form'
 
-import { Input } from '../../components/Input'
-import { Select } from '../../components/Select'
-import { formatSelectProducts } from '../../formatters/product'
-import { useToastCustom } from '../../hooks/useToastCustom'
-import { getAllProducts } from '../../services/products'
-import { ModalForm } from './Footer'
+import { Input } from '../../../components/Input'
+import { Select } from '../../../components/Select'
+import { formatSelectProducts } from '../../../formatters/product'
+import { useToastCustom } from '../../../hooks/useToastCustom'
+import { getAllProducts } from '../../../services/products'
+
+import { ModalForm } from '.'
 
 interface SelectProduct {
   label: string
@@ -50,6 +51,7 @@ export const OrderContentModal = ({
   useEffect(() => {
     loadProducts()
   }, [loadProducts])
+
   return (
     <Flex gap={8}>
       <Select
@@ -58,8 +60,8 @@ export const OrderContentModal = ({
           isLoadingProducts ? 'Carregando...' : 'Selecione o produto'
         }
         selectOptions={products}
-        {...register('product')}
-        error={error?.product?.message}
+        {...register('name')}
+        error={error?.name?.message}
       />
       <Input
         label="Quantidade"

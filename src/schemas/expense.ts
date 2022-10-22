@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 
 const expenseScheme = yup.object({
-  product: yup.string().required('Campo obrigatório'),
+  name: yup.string().required('Campo obrigatório'),
   quantity: yup
     .number()
     .nullable()
