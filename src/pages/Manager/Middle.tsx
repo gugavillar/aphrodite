@@ -7,6 +7,7 @@ import { Expense } from '../../@types/expenses'
 import { RoomDatabase } from '../../@types/rooms'
 import { ExhibitionContainer } from '../../components/Card/ExhibitionContainer'
 import { ExhibitionItem } from '../../components/Card/ExhibitionItem'
+import { LoadingContainer } from '../../components/Container/LoadingContainer'
 import { Timer } from '../../components/Timer'
 import { EMPTY, STATUS_COLOR } from '../../constants/globals'
 import { formatExpense } from '../../formatters/expense'
@@ -26,12 +27,15 @@ interface MiddleProps {
 
 export const Middle = ({ room }: MiddleProps) => {
   const [expense, setExpense] = useState<Expense>()
+  const [isLoadingExpenses, setIsLoadingExpenses] = useState(false)
   const [isClosingExpense, setIsClosingExpense] = useState(false)
   const [isOpeningExpense, setIsOpeningExpense] = useState(false)
 
   const toast = useToastCustom()
 
   const getExpense = useCallback(async () => {
+    setIsLoadingExpenses(true)
+
     try {
       const response = await getRoomExpense(room?.ref?.value?.id)
       const formattedExpense = formatExpense(response)
@@ -42,6 +46,8 @@ export const Middle = ({ room }: MiddleProps) => {
         description: 'Falha ao pegar as despesas do apartamento',
         status: 'error'
       })
+    } finally {
+      setIsLoadingExpenses(false)
     }
   }, [room?.ref?.value?.id, toast])
 
@@ -140,53 +146,55 @@ export const Middle = ({ room }: MiddleProps) => {
   const isOpenRoom = !!expense?.entryTime && expense?.isOpen
 
   return (
-    <Fragment>
-      <ExhibitionContainer mt={2}>
-        <ExhibitionItem label="Hora de entrada">
-          <Text fontSize="2xl">
-            {isOpenRoom ? expense?.formattedEntryTime : EMPTY}
-          </Text>
-        </ExhibitionItem>
-        <ExhibitionItem label="Status do quarto">
-          <Flex
-            bg={STATUS_COLOR[room?.data?.status]}
-            borderRadius="full"
-            width={5}
-            height={5}
-            align="center"
-            justify="center"
-            mt={2}
-          />
-        </ExhibitionItem>
-      </ExhibitionContainer>
-      <ExhibitionContainer>
-        <ExhibitionItem
-          label="Tempo de estadia"
-          borderBottom="1px solid"
-          borderColor="gray.300"
-        >
-          {isOpenRoom ? (
-            <Timer entryTime={expense?.entryTime} />
-          ) : (
-            <Text fontSize="2xl">{EMPTY}</Text>
-          )}
-        </ExhibitionItem>
-        <ExhibitionItem
-          label="Consumo parcial"
-          borderBottom="1px solid"
-          borderColor="gray.300"
-        >
-          <Text fontSize="2xl">{expense?.spendValue}</Text>
-        </ExhibitionItem>
-      </ExhibitionContainer>
-      <Footer
-        isOpenRoom={isOpenRoom}
-        isOpeningExpense={isOpeningExpense}
-        isClosingExpense={isClosingExpense}
-        onOpenExpenseRoom={onOpenExpenseRoom}
-        onCloseExpenseRoom={onCloseExpenseRoom}
-        onAddProductToRoom={onAddProductToRoom}
-      />
-    </Fragment>
+    <LoadingContainer isLoadingData={isLoadingExpenses}>
+      <Fragment>
+        <ExhibitionContainer mt={2}>
+          <ExhibitionItem label="Hora de entrada">
+            <Text fontSize="2xl">
+              {isOpenRoom ? expense?.formattedEntryTime : EMPTY}
+            </Text>
+          </ExhibitionItem>
+          <ExhibitionItem label="Status do quarto">
+            <Flex
+              bg={STATUS_COLOR[room?.data?.status]}
+              borderRadius="full"
+              width={5}
+              height={5}
+              align="center"
+              justify="center"
+              mt={2}
+            />
+          </ExhibitionItem>
+        </ExhibitionContainer>
+        <ExhibitionContainer>
+          <ExhibitionItem
+            label="Tempo de estadia"
+            borderBottom="1px solid"
+            borderColor="gray.300"
+          >
+            {isOpenRoom ? (
+              <Timer entryTime={expense?.entryTime} />
+            ) : (
+              <Text fontSize="2xl">{EMPTY}</Text>
+            )}
+          </ExhibitionItem>
+          <ExhibitionItem
+            label="Consumo parcial"
+            borderBottom="1px solid"
+            borderColor="gray.300"
+          >
+            <Text fontSize="2xl">{expense?.spendValue}</Text>
+          </ExhibitionItem>
+        </ExhibitionContainer>
+        <Footer
+          isOpenRoom={isOpenRoom}
+          isOpeningExpense={isOpeningExpense}
+          isClosingExpense={isClosingExpense}
+          onOpenExpenseRoom={onOpenExpenseRoom}
+          onCloseExpenseRoom={onCloseExpenseRoom}
+          onAddProductToRoom={onAddProductToRoom}
+        />
+      </Fragment>
+    </LoadingContainer>
   )
 }
