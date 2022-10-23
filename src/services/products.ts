@@ -1,43 +1,16 @@
+import { ProductDatabase, AllProducts } from '../@types/products'
 import { faunaAPI, faunaQ } from '../api/fauna'
 import { ProductForm } from '../pages/Products/FormProduct'
 
-export interface CreateProduct {
-  ref: {
-    value: {
-      id: string
-    }
-  }
-  data: {
-    name: string
-    value: number
-    amount: number
-  }
-}
-
 export const createProduct = (product: ProductForm) =>
-  faunaAPI.query<CreateProduct>(
+  faunaAPI.query<ProductDatabase>(
     faunaQ.Create(faunaQ.Collection('products'), {
       data: product
     })
   )
 
-export interface GetAllProducts {
-  data: Array<{
-    ref: {
-      value: {
-        id: string
-      }
-    }
-    data: {
-      name: string
-      value: number
-      amount: number
-    }
-  }>
-}
-
 export const getAllProducts = () =>
-  faunaAPI.query<GetAllProducts>(
+  faunaAPI.query<AllProducts>(
     faunaQ.Map(
       faunaQ.Paginate(faunaQ.Documents(faunaQ.Collection('products'))),
       faunaQ.Lambda('productRef', faunaQ.Get(faunaQ.Var('productRef')))

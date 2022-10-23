@@ -1,38 +1,21 @@
+import { ExpenseDatabase, ProductExpense } from '../@types/expenses'
 import { faunaAPI, faunaQ } from '../api/fauna'
 
-export interface GetExpense {
-  ref: {
-    value: {
-      id: string
-    }
-  }
-  data: {
-    isOpen: boolean
-    entryTime: number
-    roomRef: string
-    products?: Array<{
-      name: string
-      value: number
-      quantity: number
-    }>
-    exitTime?: number
-  }
-}
-
-export const createExpense = (roomId: string) =>
-  faunaAPI.query<GetExpense>(
+export const createExpense = (roomId: string, initialValueRoom: number) =>
+  faunaAPI.query<ExpenseDatabase>(
     faunaQ.Create(faunaQ.Collection('room_expenses'), {
       data: {
         isOpen: true,
         entryTime: new Date().getTime(),
         roomRef: faunaQ.Ref(faunaQ.Collection('rooms'), roomId),
+        initialValue: initialValueRoom,
         products: []
       }
     })
   )
 
 export const getRoomExpense = (ref: string) =>
-  faunaAPI.query<GetExpense>(
+  faunaAPI.query<ExpenseDatabase>(
     faunaQ.If(
       faunaQ.Exists(
         faunaQ.Match(
@@ -53,7 +36,7 @@ export const getRoomExpense = (ref: string) =>
   )
 
 export const closeExpenseRoom = (ref: string) =>
-  faunaAPI.query<GetExpense>(
+  faunaAPI.query<ExpenseDatabase>(
     faunaQ.Update(faunaQ.Ref(faunaQ.Collection('room_expenses'), ref), {
       data: {
         isOpen: false,
@@ -62,13 +45,8 @@ export const closeExpenseRoom = (ref: string) =>
     })
   )
 
-interface ProductExpense {
-  name: string
-  quantity: number
-}
-
 export const addProductToExpenseRoom = (ref: string, product: ProductExpense) =>
-  faunaAPI.query<GetExpense>(
+  faunaAPI.query<ExpenseDatabase>(
     faunaQ.Let(
       {
         products: faunaQ.Select(
