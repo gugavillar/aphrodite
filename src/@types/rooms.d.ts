@@ -1,6 +1,6 @@
-type TypeRoom = 'Normal' | 'Luxo' | 'Master'
+export type TypeRoom = 'Normal' | 'Luxo' | 'Master'
 
-type StatusRoom = 'Ativo' | 'Inativo'
+export type StatusRoom = 'Ativo' | 'Inativo'
 
 type RoomValuesForWeekAndWeekends = {
   value: string

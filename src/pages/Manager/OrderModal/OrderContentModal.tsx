@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Flex } from '@chakra-ui/react'
 import { FieldErrors, UseFormRegister } from 'react-hook-form'
 
+import { ProductSelect } from '../../../@types/products'
 import { Input } from '../../../components/Input'
 import { Select } from '../../../components/Select'
 import { formatSelectProducts } from '../../../formatters/product'
@@ -10,12 +11,6 @@ import { useToastCustom } from '../../../hooks/useToastCustom'
 import { getAllProducts } from '../../../services/products'
 
 import { ModalForm } from '.'
-
-interface SelectProduct {
-  label: string
-  value: string
-  isDisabled: boolean
-}
 
 interface OrderContentModalProps {
   register: UseFormRegister<ModalForm>
@@ -27,7 +22,7 @@ export const OrderContentModal = ({
   error
 }: OrderContentModalProps) => {
   const [isLoadingProducts, setIsLoadingProducts] = useState(false)
-  const [products, setProducts] = useState<Array<SelectProduct>>([])
+  const [products, setProducts] = useState<Array<ProductSelect>>([])
 
   const toast = useToastCustom()
 

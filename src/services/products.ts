@@ -1,6 +1,5 @@
-import { ProductDatabase, AllProducts } from '../@types/products'
+import { ProductDatabase, AllProducts, ProductForm } from '../@types/products'
 import { faunaAPI, faunaQ } from '../api/fauna'
-import { ProductForm } from '../pages/Products/FormProduct'
 
 export const createProduct = (product: ProductForm) =>
   faunaAPI.query<ProductDatabase>(
