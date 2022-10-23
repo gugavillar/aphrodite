@@ -25,7 +25,8 @@ export const createExpense = (roomId: string) =>
       data: {
         isOpen: true,
         entryTime: new Date().getTime(),
-        roomRef: faunaQ.Ref(faunaQ.Collection('rooms'), roomId)
+        roomRef: faunaQ.Ref(faunaQ.Collection('rooms'), roomId),
+        products: []
       }
     })
   )

@@ -20,7 +20,6 @@ import { ModalForm } from './OrderModal'
 interface MiddleProps {
   status: 'Ativo' | 'Inativo'
   roomId: string
-  number: number
 }
 
 interface Expense {
@@ -31,7 +30,7 @@ interface Expense {
   spendValue: string
 }
 
-export const Middle = ({ status, roomId, number }: MiddleProps) => {
+export const Middle = ({ status, roomId }: MiddleProps) => {
   const [expense, setExpense] = useState<Expense>()
   const [isClosingExpense, setIsClosingExpense] = useState(false)
   const [isOpeningExpense, setIsOpeningExpense] = useState(false)
@@ -52,33 +51,30 @@ export const Middle = ({ status, roomId, number }: MiddleProps) => {
     }
   }, [roomId, toast])
 
-  const onCloseExpenseRoom = useCallback(
-    async (ref: string | undefined) => {
-      if (!ref) return
+  const onCloseExpenseRoom = useCallback(async () => {
+    if (!expense?.expenseId) return
 
-      setIsClosingExpense(true)
+    setIsClosingExpense(true)
 
-      try {
-        const response = await closeExpenseRoom(ref)
-        const formattedExpense = formatExpense(response)
-        setExpense(formattedExpense)
-        toast({
-          status: 'success',
-          description: 'As despesas para o apartamento foram encerradas',
-          title: 'Apartamento fechado'
-        })
-      } catch (error) {
-        toast({
-          status: 'error',
-          description: 'Erro ao encerrar a despesa do quarto',
-          title: 'Falha ao fechar o quarto'
-        })
-      } finally {
-        setIsClosingExpense(false)
-      }
-    },
-    [toast]
-  )
+    try {
+      const response = await closeExpenseRoom(expense?.expenseId)
+      const formattedExpense = formatExpense(response)
+      setExpense(formattedExpense)
+      toast({
+        status: 'success',
+        description: 'As despesas para o apartamento foram encerradas',
+        title: 'Apartamento fechado'
+      })
+    } catch (error) {
+      toast({
+        status: 'error',
+        description: 'Erro ao encerrar a despesa do quarto',
+        title: 'Falha ao fechar o quarto'
+      })
+    } finally {
+      setIsClosingExpense(false)
+    }
+  }, [expense?.expenseId, toast])
 
   const onOpenExpenseRoom = useCallback(async () => {
     setIsOpeningExpense(true)
@@ -181,7 +177,7 @@ export const Middle = ({ status, roomId, number }: MiddleProps) => {
         isOpeningExpense={isOpeningExpense}
         isClosingExpense={isClosingExpense}
         onOpenExpenseRoom={onOpenExpenseRoom}
-        onCloseExpenseRoom={() => onCloseExpenseRoom(expense?.expenseId)}
+        onCloseExpenseRoom={onCloseExpenseRoom}
         onAddProductToRoom={onAddProductToRoom}
       />
     </Fragment>

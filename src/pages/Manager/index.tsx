@@ -53,7 +53,6 @@ export const Manager = () => {
               type={room?.data?.type}
             />
             <Middle
-              number={room?.data?.number}
               status={room?.data?.status}
               roomId={room?.ref?.value?.id}
             />
