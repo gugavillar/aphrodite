@@ -25,6 +25,6 @@ export const formatExpense = (expense: ExpenseDatabase) => {
     entryTime: expense?.data?.entryTime,
     isOpen: expense?.data?.isOpen,
     formattedEntryTime,
-    spendValue: spendValue ? currency(spendValue) : EMPTY
+    spendValue: expense?.data?.isOpen ? currency(spendValue) : EMPTY
   }
 }
