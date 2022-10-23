@@ -3,16 +3,16 @@ import { ChangeEvent } from 'react'
 import { Box, Flex, Text, VStack } from '@chakra-ui/react'
 import { UseFormRegister, UseFormSetValue } from 'react-hook-form'
 
+import { Room } from '../../@types/rooms'
 import { Input } from '../../components/Input'
 import {
   currencyWithoutDotsAndComma,
   fieldFormatCurrency
 } from '../../formatters/currency'
-import { RoomForm } from './FormRoom'
 
 interface TableRoomProps {
-  register: UseFormRegister<RoomForm>
-  setValue: UseFormSetValue<RoomForm>
+  register: UseFormRegister<Room>
+  setValue: UseFormSetValue<Room>
 }
 
 export const TableRoom = ({ register, setValue }: TableRoomProps) => {

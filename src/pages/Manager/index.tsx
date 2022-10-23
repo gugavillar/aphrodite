@@ -1,15 +1,16 @@
 import { useCallback, useEffect, useState } from 'react'
 
+import { AllRooms } from '../../@types/rooms'
 import { Card } from '../../components/Card'
 import { LoadingContainer } from '../../components/Container/LoadingContainer'
 import { PageContainer } from '../../components/Container/PageContainer'
 import { useToastCustom } from '../../hooks/useToastCustom'
-import { GetAllRooms, getAllRooms } from '../../services/rooms'
+import { getAllRooms } from '../../services/rooms'
 import { Header } from './Header'
 import { Middle } from './Middle'
 
 export const Manager = () => {
-  const [rooms, setRooms] = useState<GetAllRooms>()
+  const [rooms, setRooms] = useState<AllRooms>()
   const [isLoadingRooms, setIsLoadingRooms] = useState(true)
 
   const toast = useToastCustom()
@@ -52,10 +53,7 @@ export const Manager = () => {
               number={room?.data?.number}
               type={room?.data?.type}
             />
-            <Middle
-              status={room?.data?.status}
-              roomId={room?.ref?.value?.id}
-            />
+            <Middle room={room} />
           </Card>
         ))}
       </PageContainer>

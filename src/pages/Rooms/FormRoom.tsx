@@ -3,6 +3,7 @@ import { useCallback } from 'react'
 import { Button, Flex } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 
+import { Room } from '../../@types/rooms'
 import { InfoText } from '../../components/InfoText'
 import { Input } from '../../components/Input'
 import { Select } from '../../components/Select'
@@ -22,24 +23,6 @@ const ROOM_STATUS = [
   { label: 'Inativo', value: 'Inativo' }
 ]
 
-type TypeRoom = 'Normal' | 'Luxo' | 'Master'
-
-type StatusRoom = 'Ativo' | 'Inativo'
-
-type RoomValues = {
-  value: string
-  excessHour: string
-  stayOvernight: string
-}
-
-export interface RoomForm {
-  number: number
-  type: TypeRoom
-  status: StatusRoom
-  week: RoomValues
-  weekend: RoomValues
-}
-
 export const FormRoom = () => {
   const toast = useToastCustom()
 
@@ -49,13 +32,13 @@ export const FormRoom = () => {
     handleSubmit,
     reset,
     formState: { errors, isValid, isDirty, isSubmitting }
-  } = useForm<RoomForm>({
+  } = useForm<Room>({
     mode: 'onChange',
     resolver: roomResolver
   })
 
   const onSubmit = useCallback(
-    async (values: RoomForm) => {
+    async (values: Room) => {
       try {
         await createRoom(values)
         toast({

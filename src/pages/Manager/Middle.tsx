@@ -1,7 +1,10 @@
 import { Fragment, useCallback, useEffect, useState } from 'react'
 
 import { Flex, Text } from '@chakra-ui/react'
+import { isWeekend } from 'date-fns'
 
+import { Expense } from '../../@types/expenses'
+import { RoomDatabase } from '../../@types/rooms'
 import { ExhibitionContainer } from '../../components/Card/ExhibitionContainer'
 import { ExhibitionItem } from '../../components/Card/ExhibitionItem'
 import { Timer } from '../../components/Timer'
@@ -18,19 +21,10 @@ import { Footer } from './Footer'
 import { ModalForm } from './OrderModal'
 
 interface MiddleProps {
-  status: 'Ativo' | 'Inativo'
-  roomId: string
+  room: RoomDatabase
 }
 
-interface Expense {
-  expenseId: string
-  entryTime: number
-  isOpen: boolean
-  formattedEntryTime: string
-  spendValue: string
-}
-
-export const Middle = ({ status, roomId }: MiddleProps) => {
+export const Middle = ({ room }: MiddleProps) => {
   const [expense, setExpense] = useState<Expense>()
   const [isClosingExpense, setIsClosingExpense] = useState(false)
   const [isOpeningExpense, setIsOpeningExpense] = useState(false)
@@ -39,7 +33,7 @@ export const Middle = ({ status, roomId }: MiddleProps) => {
 
   const getExpense = useCallback(async () => {
     try {
-      const response = await getRoomExpense(roomId)
+      const response = await getRoomExpense(room?.ref?.value?.id)
       const formattedExpense = formatExpense(response)
       setExpense(formattedExpense)
     } catch (error) {
@@ -49,7 +43,7 @@ export const Middle = ({ status, roomId }: MiddleProps) => {
         status: 'error'
       })
     }
-  }, [roomId, toast])
+  }, [room?.ref?.value?.id, toast])
 
   const onCloseExpenseRoom = useCallback(async () => {
     if (!expense?.expenseId) return
@@ -79,8 +73,16 @@ export const Middle = ({ status, roomId }: MiddleProps) => {
   const onOpenExpenseRoom = useCallback(async () => {
     setIsOpeningExpense(true)
 
+    const isWeekendDay = isWeekend(new Date())
+    const initialValueRoom = isWeekendDay
+      ? room?.data?.weekend?.value
+      : room?.data?.week?.value
+
     try {
-      const response = await createExpense(roomId)
+      const response = await createExpense(
+        room?.ref?.value?.id,
+        initialValueRoom
+      )
       const formattedExpense = formatExpense(response)
       setExpense(formattedExpense)
       toast({
@@ -97,7 +99,12 @@ export const Middle = ({ status, roomId }: MiddleProps) => {
     } finally {
       setIsOpeningExpense(false)
     }
-  }, [roomId, toast])
+  }, [
+    room?.data?.week?.value,
+    room?.data?.weekend?.value,
+    room?.ref?.value?.id,
+    toast
+  ])
 
   const onAddProductToRoom = useCallback(
     async (product: ModalForm) => {
@@ -142,7 +149,7 @@ export const Middle = ({ status, roomId }: MiddleProps) => {
         </ExhibitionItem>
         <ExhibitionItem label="Status do quarto">
           <Flex
-            bg={STATUS_COLOR[status]}
+            bg={STATUS_COLOR[room?.data?.status]}
             borderRadius="full"
             width={5}
             height={5}

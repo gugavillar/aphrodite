@@ -4,3 +4,20 @@ export interface Product {
   value: string
   amount: number
 }
+
+export interface ProductDatabase {
+  ref: {
+    value: {
+      id: string
+    }
+  }
+  data: {
+    name: string
+    value: number
+    amount: number
+  }
+}
+
+export interface AllProducts {
+  data: Array<ProductDatabase>
+}
