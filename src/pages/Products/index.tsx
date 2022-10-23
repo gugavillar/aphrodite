@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import { Product } from '../../@types/products'
+import { Product, ProductForm } from '../../@types/products'
 import { PageContainer } from '../../components/Container/PageContainer'
 import { InfoText } from '../../components/InfoText'
 import { formatProduct, formatProducts } from '../../formatters/product'
@@ -10,7 +10,7 @@ import {
   getAllProducts,
   deleteProduct
 } from '../../services/products'
-import { FormProduct, ProductForm } from './FormProduct'
+import { FormProduct } from './FormProduct'
 import { TableProduct } from './TableProduct'
 
 export const Products = () => {

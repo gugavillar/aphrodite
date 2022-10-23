@@ -5,6 +5,18 @@ export interface Product {
   amount: number
 }
 
+export interface ProductForm {
+  name: string
+  value: string
+  amount: number
+}
+
+export interface ProductSelect {
+  label: string
+  value: string
+  isDisabled: boolean
+}
+
 export interface ProductDatabase {
   ref: {
     value: {

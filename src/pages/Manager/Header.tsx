@@ -1,11 +1,12 @@
 import { Text } from '@chakra-ui/react'
 
+import { TypeRoom } from '../../@types/rooms'
 import { ExhibitionContainer } from '../../components/Card/ExhibitionContainer'
 import { ExhibitionItem } from '../../components/Card/ExhibitionItem'
 
 interface HeaderProps {
   number: number
-  type: 'Normal' | 'Luxo' | 'Master'
+  type: TypeRoom
 }
 
 export const Header = ({ number, type }: HeaderProps) => {

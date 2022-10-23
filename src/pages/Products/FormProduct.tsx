@@ -3,18 +3,13 @@ import { ChangeEvent, useCallback } from 'react'
 import { Button, Flex } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 
+import { ProductForm } from '../../@types/products'
 import { Input } from '../../components/Input'
 import {
   currencyWithoutDotsAndComma,
   fieldFormatCurrency
 } from '../../formatters/currency'
 import { productResolver } from '../../schemas/product'
-
-export interface ProductForm {
-  name: string
-  value: string
-  amount: number
-}
 
 interface FormProductProps {
   onSubmitHandler: (values: ProductForm) => Promise<void>
