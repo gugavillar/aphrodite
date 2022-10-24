@@ -65,14 +65,6 @@ export const FormProduct = ({ onSubmitHandler }: FormProductProps) => {
           label="Valor do produto"
           width={48}
         />
-        <Input
-          {...register('amount')}
-          type="number"
-          step={1}
-          label="Quantidade de produto"
-          width={48}
-          error={errors?.amount?.message}
-        />
       </Flex>
       <Button
         colorScheme="green"

@@ -16,10 +16,6 @@ const headingTable = [
     type: TABLE_HEADING_TYPE.string
   },
   {
-    label: 'Quantidade',
-    type: TABLE_HEADING_TYPE.number
-  },
-  {
     label: '',
     type: TABLE_HEADING_TYPE.number
   }
@@ -58,7 +54,6 @@ export const TableProduct = ({
               <Tr key={product?.productId}>
                 <Td>{product?.name}</Td>
                 <Td>{product?.value}</Td>
-                <Td isNumeric>{product?.amount}</Td>
                 <Td isNumeric>
                   <Button
                     colorScheme="red"

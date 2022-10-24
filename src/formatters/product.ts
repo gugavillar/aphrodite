@@ -17,6 +17,5 @@ export const formatProduct = (product: ProductDatabase) => ({
 export const formatSelectProducts = (products: AllProducts) =>
   products?.data?.map((product) => ({
     label: product?.data?.name,
-    value: product?.data?.name,
-    isDisabled: product?.data?.amount <= 0
+    value: product?.data?.name
   }))

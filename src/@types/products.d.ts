@@ -2,19 +2,16 @@ export interface Product {
   productId: string
   name: string
   value: string
-  amount: number
 }
 
 export interface ProductForm {
   name: string
   value: string
-  amount: number
 }
 
 export interface ProductSelect {
   label: string
   value: string
-  isDisabled: boolean
 }
 
 export interface ProductDatabase {
@@ -26,7 +23,6 @@ export interface ProductDatabase {
   data: {
     name: string
     value: number
-    amount: number
   }
 }
 
