@@ -1,7 +1,6 @@
-import { Fragment, useCallback, useEffect, useState } from 'react'
+import { Fragment, useCallback, useContext, useEffect, useState } from 'react'
 
 import { Flex, Text } from '@chakra-ui/react'
-import { isWeekend } from 'date-fns'
 
 import { Expense } from '../../@types/expenses'
 import { RoomDatabase } from '../../@types/rooms'
@@ -10,138 +9,26 @@ import { ExhibitionItem } from '../../components/Card/ExhibitionItem'
 import { LoadingContainer } from '../../components/Container/LoadingContainer'
 import { Timer } from '../../components/Timer'
 import { EMPTY, STATUS_COLOR } from '../../constants/globals'
-import { formatExpense } from '../../formatters/expense'
-import { useToastCustom } from '../../hooks/useToastCustom'
-import {
-  addProductToExpenseRoom,
-  closeExpenseRoom,
-  createExpense,
-  getRoomExpense
-} from '../../services/expenses'
+import { ExpenseContext } from '../../context/Expense'
 import { Footer } from './Footer'
-import { ModalForm } from './OrderModal'
 
 interface MiddleProps {
   room: RoomDatabase
 }
 
 export const Middle = ({ room }: MiddleProps) => {
-  const [expense, setExpense] = useState<Expense>()
-  const [isLoadingExpenses, setIsLoadingExpenses] = useState(false)
-  const [isClosingExpense, setIsClosingExpense] = useState(false)
-  const [isOpeningExpense, setIsOpeningExpense] = useState(false)
+  const [expense, setExpense] = useState<Expense | undefined>()
 
-  const toast = useToastCustom()
+  const { getExpense, isLoadingExpenses } = useContext(ExpenseContext)
 
-  const getExpense = useCallback(async () => {
-    setIsLoadingExpenses(true)
-
-    try {
-      const response = await getRoomExpense(room?.ref?.value?.id)
-      const formattedExpense = formatExpense(response)
-      setExpense(formattedExpense)
-    } catch (error) {
-      toast({
-        title: 'Falha na requisição',
-        description: 'Falha ao pegar as despesas do apartamento',
-        status: 'error'
-      })
-    } finally {
-      setIsLoadingExpenses(false)
-    }
-  }, [room?.ref?.value?.id, toast])
-
-  const onCloseExpenseRoom = useCallback(async () => {
-    if (!expense?.expenseId) return
-
-    setIsClosingExpense(true)
-
-    try {
-      const response = await closeExpenseRoom(expense?.expenseId)
-      const formattedExpense = formatExpense(response)
-      setExpense(formattedExpense)
-      toast({
-        status: 'success',
-        description: 'As despesas para o apartamento foram encerradas',
-        title: 'Apartamento fechado'
-      })
-    } catch (error) {
-      toast({
-        status: 'error',
-        description: 'Erro ao encerrar a despesa do quarto',
-        title: 'Falha ao fechar o quarto'
-      })
-    } finally {
-      setIsClosingExpense(false)
-    }
-  }, [expense?.expenseId, toast])
-
-  const onOpenExpenseRoom = useCallback(async () => {
-    setIsOpeningExpense(true)
-
-    const isWeekendDay = isWeekend(new Date())
-    const initialValueRoom = isWeekendDay
-      ? room?.data?.weekend?.value
-      : room?.data?.week?.value
-
-    try {
-      const response = await createExpense(
-        room?.ref?.value?.id,
-        initialValueRoom
-      )
-      const formattedExpense = formatExpense(response)
-      setExpense(formattedExpense)
-      toast({
-        status: 'success',
-        title: 'Apartamento aberto',
-        description: 'As despesas para o apartamento já podem ser inseridas'
-      })
-    } catch (error) {
-      toast({
-        status: 'error',
-        description: 'Erro ao criar a despesa do quarto',
-        title: 'Falha ao abrir o quarto'
-      })
-    } finally {
-      setIsOpeningExpense(false)
-    }
-  }, [
-    room?.data?.week?.value,
-    room?.data?.weekend?.value,
-    room?.ref?.value?.id,
-    toast
-  ])
-
-  const onAddProductToRoom = useCallback(
-    async (product: ModalForm) => {
-      if (!expense?.expenseId) return
-
-      try {
-        const response = await addProductToExpenseRoom(
-          expense?.expenseId,
-          product
-        )
-        const formattedExpense = formatExpense(response)
-        setExpense(formattedExpense)
-        toast({
-          status: 'success',
-          description: `O produto ${product?.name} foi adicionado`,
-          title: 'Produto adicionado'
-        })
-      } catch (error) {
-        toast({
-          status: 'error',
-          description: 'O produto não foi adicionado',
-          title: 'Falha ao adicionar'
-        })
-      }
-    },
-    [expense?.expenseId, toast]
-  )
+  const loadExpense = useCallback(async () => {
+    const response = await getExpense(room)
+    setExpense(response)
+  }, [getExpense, room])
 
   useEffect(() => {
-    getExpense()
-  }, [getExpense])
+    loadExpense()
+  }, [loadExpense])
 
   const isOpenRoom = !!expense?.entryTime && expense?.isOpen
 
@@ -187,12 +74,10 @@ export const Middle = ({ room }: MiddleProps) => {
           </ExhibitionItem>
         </ExhibitionContainer>
         <Footer
+          expense={expense}
+          onSetExpense={setExpense}
           isOpenRoom={isOpenRoom}
-          isOpeningExpense={isOpeningExpense}
-          isClosingExpense={isClosingExpense}
-          onOpenExpenseRoom={onOpenExpenseRoom}
-          onCloseExpenseRoom={onCloseExpenseRoom}
-          onAddProductToRoom={onAddProductToRoom}
+          room={room}
         />
       </Fragment>
     </LoadingContainer>

@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { Dispatch, SetStateAction, useCallback, useContext } from 'react'
 
 import {
   Modal,
@@ -12,6 +12,8 @@ import {
 } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 
+import { Expense } from '../../../@types/expenses'
+import { ExpenseContext } from '../../../context/Expense'
 import { expenseResolver } from '../../../schemas/expense'
 import { OrderContentModal } from './OrderContentModal'
 
@@ -22,16 +24,18 @@ export interface ModalForm {
 
 interface OrderModalProps {
   isOpen: boolean
-  onClose: () => void
   title: string
-  onAddProductToRoom: (product: ModalForm) => Promise<void>
+  onClose: () => void
+  onSetExpense: Dispatch<SetStateAction<Expense | undefined>>
+  expense: Expense | undefined
 }
 
 export const OrderModal = ({
   isOpen,
-  onClose,
   title,
-  onAddProductToRoom
+  expense,
+  onClose,
+  onSetExpense
 }: OrderModalProps) => {
   const {
     register,
@@ -43,13 +47,18 @@ export const OrderModal = ({
     resolver: expenseResolver
   })
 
+  const { onAddProductToRoom } = useContext(ExpenseContext)
+
   const onSubmit = useCallback(
     async (values: ModalForm) => {
-      await onAddProductToRoom(values)
+      if (!expense?.expenseId) return
+
+      const response = await onAddProductToRoom(values, expense?.expenseId)
+      onSetExpense(response)
       reset()
       onClose()
     },
-    [onAddProductToRoom, onClose, reset]
+    [expense?.expenseId, onAddProductToRoom, onClose, onSetExpense, reset]
   )
 
   return (
@@ -80,10 +89,7 @@ export const OrderModal = ({
           />
         </ModalBody>
 
-        <ModalFooter
-          gap={6}
-          justifyContent="space-between"
-        >
+        <ModalFooter justifyContent="space-between">
           <Button
             colorScheme="red"
             onClick={onClose}
