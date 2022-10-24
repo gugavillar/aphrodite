@@ -85,15 +85,12 @@ export const ExpenseContextProvider = ({
   const onOpenExpenseRoom = useCallback(
     async (room: RoomDatabase) => {
       const isWeekendDay = isWeekend(new Date())
-      const initialValueRoom = isWeekendDay
+      const valueRoom = isWeekendDay
         ? room?.data?.weekend?.value
         : room?.data?.week?.value
 
       try {
-        const response = await createExpense(
-          room?.ref?.value?.id,
-          initialValueRoom
-        )
+        const response = await createExpense(room?.ref?.value?.id, valueRoom)
         const formattedExpense = formatExpense(response)
         toast({
           status: 'success',

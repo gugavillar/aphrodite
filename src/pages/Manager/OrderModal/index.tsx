@@ -27,13 +27,13 @@ interface OrderModalProps {
   title: string
   onClose: () => void
   onSetExpense: Dispatch<SetStateAction<Expense | undefined>>
-  expense: Expense | undefined
+  expenseId: string | undefined
 }
 
 export const OrderModal = ({
   isOpen,
   title,
-  expense,
+  expenseId,
   onClose,
   onSetExpense
 }: OrderModalProps) => {
@@ -51,14 +51,14 @@ export const OrderModal = ({
 
   const onSubmit = useCallback(
     async (values: ModalForm) => {
-      if (!expense?.expenseId) return
+      if (!expenseId) return
 
-      const response = await onAddProductToRoom(values, expense?.expenseId)
+      const response = await onAddProductToRoom(values, expenseId)
       onSetExpense(response)
       reset()
       onClose()
     },
-    [expense?.expenseId, onAddProductToRoom, onClose, onSetExpense, reset]
+    [expenseId, onAddProductToRoom, onClose, onSetExpense, reset]
   )
 
   return (

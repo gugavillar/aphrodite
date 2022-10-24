@@ -83,9 +83,11 @@ export const Footer = ({
         onClose={onOrderModalClose}
         title="Adicione produtos para o apartamento"
         onSetExpense={onSetExpense}
-        expense={expense}
+        expenseId={expense?.expenseId}
       />
       <CloseModal
+        expense={expense}
+        onSetExpense={onSetExpense}
         isOpen={isCloseModalOpen}
         onClose={onCloseModalClose}
         title="Quarto"

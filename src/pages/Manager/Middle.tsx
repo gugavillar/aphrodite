@@ -10,6 +10,8 @@ import { LoadingContainer } from '../../components/Container/LoadingContainer'
 import { Timer } from '../../components/Timer'
 import { EMPTY, STATUS_COLOR } from '../../constants/globals'
 import { ExpenseContext } from '../../context/Expense'
+import { currency } from '../../formatters/currency'
+import { calculateTotal, formatTime } from '../../formatters/globals'
 import { Footer } from './Footer'
 
 interface MiddleProps {
@@ -32,14 +34,20 @@ export const Middle = ({ room }: MiddleProps) => {
 
   const isOpenRoom = !!expense?.entryTime && expense?.isOpen
 
+  const formattedEntryTime = isOpenRoom ? formatTime(expense?.entryTime) : EMPTY
+
+  const spendValue = isOpenRoom
+    ? calculateTotal(expense?.products, expense?.value)
+    : 0
+
+  const formattedSpendValue = currency(spendValue)
+
   return (
     <LoadingContainer isLoadingData={isLoadingExpenses}>
       <Fragment>
         <ExhibitionContainer mt={2}>
           <ExhibitionItem label="Hora de entrada">
-            <Text fontSize="2xl">
-              {isOpenRoom ? expense?.formattedEntryTime : EMPTY}
-            </Text>
+            <Text fontSize="2xl">{formattedEntryTime}</Text>
           </ExhibitionItem>
           <ExhibitionItem label="Status do quarto">
             <Flex
@@ -70,7 +78,7 @@ export const Middle = ({ room }: MiddleProps) => {
             borderBottom="1px solid"
             borderColor="gray.300"
           >
-            <Text fontSize="2xl">{expense?.spendValue}</Text>
+            <Text fontSize="2xl">{formattedSpendValue}</Text>
           </ExhibitionItem>
         </ExhibitionContainer>
         <Footer

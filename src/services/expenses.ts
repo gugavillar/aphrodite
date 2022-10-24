@@ -1,14 +1,14 @@
 import { ExpenseDatabase, ProductExpense } from '../@types/expenses'
 import { faunaAPI, faunaQ } from '../api/fauna'
 
-export const createExpense = (roomId: string, initialValueRoom: number) =>
+export const createExpense = (roomId: string, valueRoom: number) =>
   faunaAPI.query<ExpenseDatabase>(
     faunaQ.Create(faunaQ.Collection('room_expenses'), {
       data: {
         isOpen: true,
         entryTime: new Date().getTime(),
         roomRef: faunaQ.Ref(faunaQ.Collection('rooms'), roomId),
-        initialValue: initialValueRoom,
+        value: valueRoom,
         products: []
       }
     })

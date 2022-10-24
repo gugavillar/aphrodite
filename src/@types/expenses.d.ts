@@ -1,9 +1,15 @@
 export interface Expense {
-  expenseId: string
-  entryTime: number
   isOpen: boolean
-  formattedEntryTime: string
-  spendValue: string
+  entryTime: number
+  roomRef: string
+  value: number
+  products: Array<{
+    name: string
+    value: number
+    quantity: number
+  }>
+  exitTime?: number | undefined
+  expenseId: string
 }
 
 export interface ExpenseDatabase {
@@ -16,8 +22,8 @@ export interface ExpenseDatabase {
     isOpen: boolean
     entryTime: number
     roomRef: string
-    initialValue: number
-    products?: Array<{
+    value: number
+    products: Array<{
       name: string
       value: number
       quantity: number
