@@ -35,7 +35,6 @@ const SelectField = forwardRef(
           mb={1}
           color="blackAlpha.400"
           fontWeight="semibold"
-          textAlign="center"
         >
           {label}
         </FormLabel>
