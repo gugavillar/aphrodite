@@ -4,33 +4,24 @@ import { Product } from '../../@types/products'
 import { LoadingContainer } from '../../components/Container/LoadingContainer'
 import { InfoText } from '../../components/InfoText'
 import { Table } from '../../components/Table'
-
-interface TableHeading {
-  readonly string: 'string'
-  readonly number: 'number'
-}
-
-const tableHeadingType: TableHeading = {
-  string: 'string',
-  number: 'number'
-}
+import { TABLE_HEADING_TYPE } from '../../constants/globals'
 
 const headingTable = [
   {
     label: 'Nome do produto',
-    type: tableHeadingType?.string
+    type: TABLE_HEADING_TYPE?.string
   },
   {
     label: 'Valor',
-    type: tableHeadingType.string
+    type: TABLE_HEADING_TYPE.string
   },
   {
     label: 'Quantidade',
-    type: tableHeadingType.number
+    type: TABLE_HEADING_TYPE.number
   },
   {
     label: '',
-    type: tableHeadingType.number
+    type: TABLE_HEADING_TYPE.number
   }
 ]
 

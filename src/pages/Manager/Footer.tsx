@@ -1,25 +1,44 @@
+import { Dispatch, SetStateAction, useCallback, useContext } from 'react'
+
 import { Flex, Button, useDisclosure } from '@chakra-ui/react'
 
-import { ModalForm, OrderModal } from './OrderModal'
+import { Expense } from '../../@types/expenses'
+import { RoomDatabase } from '../../@types/rooms'
+import { ExpenseContext } from '../../context/Expense'
+import { CloseModal } from './CloseModal'
+import { OrderModal } from './OrderModal'
 
 interface FooterProps {
-  isOpeningExpense: boolean
-  isClosingExpense: boolean
-  onCloseExpenseRoom: () => Promise<void>
-  onOpenExpenseRoom: () => Promise<void>
-  onAddProductToRoom: (product: ModalForm) => Promise<void>
   isOpenRoom: boolean
+  room: RoomDatabase
+  expense: Expense | undefined
+  onSetExpense: Dispatch<SetStateAction<Expense | undefined>>
 }
 
 export const Footer = ({
   isOpenRoom,
-  isOpeningExpense,
-  isClosingExpense,
-  onCloseExpenseRoom,
-  onOpenExpenseRoom,
-  onAddProductToRoom
+  room,
+  expense,
+  onSetExpense
 }: FooterProps) => {
-  const { isOpen, onClose, onOpen } = useDisclosure()
+  const {
+    isOpen: isOrderModalOpen,
+    onClose: onOrderModalClose,
+    onOpen: onOrderModalOpen
+  } = useDisclosure()
+
+  const {
+    isOpen: isCloseModalOpen,
+    onClose: onCloseModalClose,
+    onOpen: onCloseModalOpen
+  } = useDisclosure()
+
+  const { onOpenExpenseRoom } = useContext(ExpenseContext)
+
+  const handleOpenExpenseRoom = useCallback(async () => {
+    const response = await onOpenExpenseRoom(room)
+    onSetExpense(response)
+  }, [onOpenExpenseRoom, onSetExpense, room])
 
   return (
     <Flex
@@ -34,7 +53,7 @@ export const Footer = ({
         fontSize="2xl"
         fontWeight="normal"
         isDisabled={!isOpenRoom}
-        onClick={onOpen}
+        onClick={onOrderModalOpen}
       >
         Pedido
       </Button>
@@ -44,8 +63,7 @@ export const Footer = ({
           variant="ghost"
           fontSize="2xl"
           fontWeight="normal"
-          isLoading={isClosingExpense}
-          onClick={onCloseExpenseRoom}
+          onClick={onCloseModalOpen}
         >
           Fechar
         </Button>
@@ -55,17 +73,22 @@ export const Footer = ({
           variant="ghost"
           fontSize="2xl"
           fontWeight="normal"
-          isLoading={isOpeningExpense}
-          onClick={onOpenExpenseRoom}
+          onClick={handleOpenExpenseRoom}
         >
           Abrir
         </Button>
       )}
       <OrderModal
-        onAddProductToRoom={onAddProductToRoom}
-        isOpen={isOpen}
-        onClose={onClose}
+        isOpen={isOrderModalOpen}
+        onClose={onOrderModalClose}
         title="Adicione produtos para o apartamento"
+        onSetExpense={onSetExpense}
+        expense={expense}
+      />
+      <CloseModal
+        isOpen={isCloseModalOpen}
+        onClose={onCloseModalClose}
+        title="Quarto"
       />
     </Flex>
   )
